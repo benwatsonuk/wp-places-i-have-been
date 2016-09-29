@@ -1,6 +1,6 @@
 var gulp        = require('gulp');
 var sass        = require('gulp-sass');
-var minifyCss   = require('gulp-minify-css')
+var minifyCss   = require('gulp-minify-css');
 var include     = require('gulp-include');
 var watch       = require('gulp-watch');
 
@@ -14,8 +14,8 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task("scripts", function() {
-    gulp.src(['./scripts/main.js'])
+gulp.task('scripts', function() {
+    return gulp.src(['./scripts/main.js'])
         .pipe( include() )
         .pipe( gulp.dest("./dist/") )
 });
@@ -26,4 +26,3 @@ gulp.task('watch', function () {
 });
 
 gulp.task('build', ['scripts', 'sass']);
-gulp.task('watch', ['watch']);

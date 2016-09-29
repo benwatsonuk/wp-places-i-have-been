@@ -102,20 +102,46 @@ function regionStructure($region, $array, $existingData) {
 			$regionName = 'Antarctica';
 		break;
 	}
-	$regionStructure = '<fieldset><legend>'.$regionName.'</legend>';
+	$regionStructure = '<fieldset><legend>'.$regionName.'</legend><div class="countryContainer">';
 	foreach($array as $k => $v) {
 		($existingData["'$region'"]["'$k'"]) ? $been = true : $been = false;
 		$regionStructure .= countryStructure($k, $v, $region, $been);
 	}
-	$regionStructure .= '</fieldset>';
+	$regionStructure .= '</div></fieldset>';
 	return $regionStructure;
 }
 
 function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
-	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
+	$country = '<div class="country '.$code.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
+
+function show_visited_countries(){
+	$theExistingData = maybe_unserialize(get_option('wp_countries_visited'));
+	$arr = [];
+	foreach($theExistingData as $k => $v) {
+		foreach($v as $k2 => $v2) {
+			array_push($arr, $k2);
+		}
+	}
+	sort($arr);
+
+	return outputStructure($arr);
+}
+
+function outputStructure($arr) {
+	$structure = '<ul id="countriesOutput">';
+	foreach ( $arr as $k ) {
+		$structure .= '<li><img src="'. plugins_url( "/flags/mini/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" /></li>';
+	}
+	$structure .= '</ul>';
+	return $structure;
+}
+
+add_shortcode( 'countries_visited', 'show_visited_countries');
+
+
 
 
 
