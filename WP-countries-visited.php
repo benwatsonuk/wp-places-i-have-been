@@ -19,9 +19,7 @@ function countries_visited_menu() {
 add_action( 'admin_init', 'countries_visited_settings' );
 
 function countries_visited_settings() {
-	register_setting( 'countries_visited_settings_group', 'accountant_name' );
-	register_setting( 'countries_visited_settings_group', 'accountant_phone' );
-	register_setting( 'countries_visited_settings_group', 'accountant_email' );
+	register_setting( 'countries_visited_settings_group', 'wp_countries_visited' );
 }
 
 function countries_visited_settings_page() { ?>
@@ -33,32 +31,16 @@ function countries_visited_settings_page() { ?>
 	<?php do_settings_sections( 'countries_visited_settings_group' ); ?>
 	<?php
         $theData = theRegions();
-		echo regionStructure('AS', $theData['AS']);
-		echo regionStructure('EU', $theData['EU']);
-		echo regionStructure('AF', $theData['AF']);
-		echo regionStructure('OC', $theData['OC']);
-		echo regionStructure('NA', $theData['NA']);
-		echo regionStructure('SA', $theData['SA']);
-		echo regionStructure('AN', $theData['AN']);
+		$theExistingData = maybe_unserialize(get_option('wp_countries_visited'));
+		echo regionStructure('AS', $theData['AS'], $theExistingData);
+		echo regionStructure('EU', $theData['EU'], $theExistingData);
+		echo regionStructure('AF', $theData['AF'], $theExistingData);
+		echo regionStructure('OC', $theData['OC'], $theExistingData);
+		echo regionStructure('NA', $theData['NA'], $theExistingData);
+		echo regionStructure('SA', $theData['SA'], $theExistingData);
+		echo regionStructure('AN', $theData['AN'], $theExistingData);
 
     ?>
-
-<!--	<table class="form-table">-->
-<!--		<tr valign="top">-->
-<!--			<th scope="row">Accountant Name</th>-->
-<!--			<td><input type="text" name="accountant_name" value="--><?php //echo esc_attr( get_option('accountant_name') ); ?><!--" /></td>-->
-<!--		</tr>-->
-<!---->
-<!--		<tr valign="top">-->
-<!--			<th scope="row">Accountant Phone Number</th>-->
-<!--			<td><input type="text" name="accountant_phone" value="--><?php //echo esc_attr( get_option('accountant_phone') ); ?><!--" /></td>-->
-<!--		</tr>-->
-<!---->
-<!--		<tr valign="top">-->
-<!--			<th scope="row">Accountant Email</th>-->
-<!--			<td><input type="text" name="accountant_email" value="--><?php //echo esc_attr( get_option('accountant_email') ); ?><!--" /></td>-->
-<!--		</tr>-->
-<!--	</table>-->
 
 	<?php submit_button(); ?>
 
@@ -86,7 +68,7 @@ function theRegions() {
 	return $arr;
 }
 
-function regionStructure($region, $array = null) {
+function regionStructure($region, $array, $existingData) {
 	switch ($region) {
 		case 'AS':
 			$regionName = 'Asia';
@@ -110,16 +92,18 @@ function regionStructure($region, $array = null) {
 			$regionName = 'Antarctica';
 		break;
 	}
-	$region = '<fieldset><legend>'.$regionName.'</legend>';
+	$regionStructure = '<fieldset><legend>'.$regionName.'</legend>';
 	foreach($array as $k => $v) {
-		$region .= countryStructure($k, $v);
+		($existingData["'$region'"]["'$k'"]) ? $been = true : $been = false;
+		$regionStructure .= countryStructure($k, $v, $region, $been);
 	}
-	$region .= '</fieldset>';
-	return $region;
+	$regionStructure .= '</fieldset>';
+	return $regionStructure;
 }
 
-function countryStructure($code, $name) {
-	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="'.$code.'" id="'.$code.'" value="1"></div>';
+function countryStructure($code, $name, $region, $been) {
+	($been == true) ? $checked = 'checked="checked"' : $checked = '';
+	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img2 src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
 
