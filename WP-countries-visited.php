@@ -30,8 +30,19 @@ function countries_visited_settings_page() { ?>
 
 	<form method="post" action="options.php">
     <?php settings_fields( 'countries_visited_settings_group' ); ?>
-		<?php echo the_regions(); ?>
 	<?php do_settings_sections( 'countries_visited_settings_group' ); ?>
+	<?php
+        $theData = theRegions();
+		echo regionStructure('AS', $theData['AS']);
+		echo regionStructure('EU', $theData['EU']);
+		echo regionStructure('AF', $theData['AF']);
+		echo regionStructure('OC', $theData['OC']);
+		echo regionStructure('NA', $theData['NA']);
+		echo regionStructure('SA', $theData['SA']);
+		echo regionStructure('AN', $theData['AN']);
+
+    ?>
+
 <!--	<table class="form-table">-->
 <!--		<tr valign="top">-->
 <!--			<th scope="row">Accountant Name</th>-->
@@ -55,7 +66,7 @@ function countries_visited_settings_page() { ?>
 	</div>
 <?php }
 
-function the_regions() {
+function theRegions() {
 	$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
 	$regionsJSON = file_get_contents("data/regions.json", FILE_USE_INCLUDE_PATH);
 	$regions = json_decode($regionsJSON, true);
@@ -69,9 +80,47 @@ function the_regions() {
 				$arr2[$k2] = $countries[$k2];
 			}
 		}
+		asort($arr2);
 		$arr[$v] = $arr2;
 	}
 	return $arr;
+}
+
+function regionStructure($region, $array = null) {
+	switch ($region) {
+		case 'AS':
+			$regionName = 'Asia';
+        break;
+		case 'EU':
+			$regionName = 'Europe';
+        break;
+		case 'AF':
+			$regionName = 'Africa';
+			break;
+		case 'NA':
+			$regionName = 'North America';
+		break;
+		case 'OC':
+			$regionName = 'Oceania';
+		break;
+		case 'SA':
+			$regionName = 'South America';
+		break;
+		case 'AN':
+			$regionName = 'Antarctica';
+		break;
+	}
+	$region = '<fieldset><legend>'.$regionName.'</legend>';
+	foreach($array as $k => $v) {
+		$region .= countryStructure($k, $v);
+	}
+	$region .= '</fieldset>';
+	return $region;
+}
+
+function countryStructure($code, $name) {
+	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="'.$code.'" id="'.$code.'" value="1"></div>';
+	return $country;
 }
 
 
