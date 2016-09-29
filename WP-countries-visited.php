@@ -10,6 +10,16 @@ Author URI: http://benwatson.uk
 License: A "Slug" license name e.g. GPL2
 */
 
+function my_enqueue($hook) {
+	if ( 'toplevel_page_countries_visited_settings' != $hook ) {
+		return;
+	}
+	wp_enqueue_style( 'countries_visited_styles', plugins_url("css/main.css", __FILE__));
+	wp_enqueue_script( 'countries_visited_script', plugins_url("scripts/main.js", __FILE__));
+}
+add_action( 'admin_enqueue_scripts', 'my_enqueue' );
+
+
 add_action('admin_menu', 'countries_visited_menu');
 
 function countries_visited_menu() {
@@ -103,7 +113,7 @@ function regionStructure($region, $array, $existingData) {
 
 function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
-	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img2 src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
+	$country = '<div class="country '.$code.'"><label for="'.$code.'">'.$name.'<img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" /></label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
 
