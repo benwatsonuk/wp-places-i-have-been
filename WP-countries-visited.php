@@ -115,7 +115,7 @@ function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
 	($been == true) ? $countryClass = 'checked' : $countryClass = '';
 
-	$country = '<div class="country '.$code.' '.$countryClass.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
+	$country = '<div class="country '.$code.' '.$countryClass.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
 
@@ -135,7 +135,7 @@ function show_visited_countries(){
 function outputStructure($arr) {
 	$structure = '<ul id="countriesOutput">';
 	foreach ( $arr as $k ) {
-		$structure .= '<li><img src="'. plugins_url( "/flags/mini/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" /></li>';
+		$structure .= '<li><img src="'. plugins_url( "/flags/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" /></li>';
 	}
 	$structure .= '</ul>';
 	return $structure;

@@ -22,7 +22,6 @@ jQuery( document ).ready( function( $ ) {
     });
 
     function countryCount(elem){
-        console.log(elem);
         var totalCountries  = jQuery(elem).find('.country').length;
         var visitedCountries = jQuery(elem).find('.country.checked').length;
         return visitedCountries +' / '+totalCountries+' ('+Math.ceil((visitedCountries/totalCountries)*100)+'%)';
