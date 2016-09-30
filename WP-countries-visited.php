@@ -15,7 +15,7 @@ function my_enqueue($hook) {
 		return;
 	}
 	wp_enqueue_style( 'countries_visited_styles', plugins_url("dist/main.css", __FILE__));
-	wp_enqueue_script( 'countries_visited_script', plugins_url("dist/main.js", __FILE__));
+	wp_enqueue_script( 'countries_visited_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
 }
 add_action( 'admin_enqueue_scripts', 'my_enqueue' );
 
