@@ -135,7 +135,11 @@ function show_visited_countries(){
 function outputStructure($arr) {
 	$structure = '<ul id="countriesOutput">';
 	foreach ( $arr as $k ) {
-		$structure .= '<li><img src="'. plugins_url( "/flags/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" /></li>';
+		$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
+		$countriesJSON = json_decode($countriesJSON);
+		$k2 = str_replace('\'', '', $k);
+		$countryName = $countriesJSON->$k2;
+		$structure .= '<li><img src="'. plugins_url( "/flags/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" alt="'.$countryName.'" /></li>';
 	}
 	$structure .= '</ul>';
 	return $structure;
