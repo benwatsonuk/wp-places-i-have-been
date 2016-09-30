@@ -35,7 +35,7 @@ function countries_visited_settings() {
 function countries_visited_settings_page() { ?>
 	<div class="wrap">
 	<h2>Which countries have you been to?</h2>
-
+	<span id="totalCountries">You have been to <span class="counter"></span> countries!</span>
 	<form method="post" action="options.php">
     <?php settings_fields( 'countries_visited_settings_group' ); ?>
 	<?php do_settings_sections( 'countries_visited_settings_group' ); ?>
@@ -102,7 +102,7 @@ function regionStructure($region, $array, $existingData) {
 			$regionName = 'Antarctica';
 		break;
 	}
-	$regionStructure = '<fieldset><legend>'.$regionName.'</legend><div class="countryContainer">';
+	$regionStructure = '<fieldset><legend>'.$regionName.'<span class="countryCount"></span></legend><div class="countryContainer">';
 	foreach($array as $k => $v) {
 		($existingData["'$region'"]["'$k'"]) ? $been = true : $been = false;
 		$regionStructure .= countryStructure($k, $v, $region, $been);
@@ -113,7 +113,9 @@ function regionStructure($region, $array, $existingData) {
 
 function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
-	$country = '<div class="country '.$code.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
+	($been == true) ? $countryClass = 'checked' : $countryClass = '';
+
+	$country = '<div class="country '.$code.' '.$countryClass.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/mini/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
 
