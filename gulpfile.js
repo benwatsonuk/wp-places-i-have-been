@@ -6,7 +6,7 @@ var watch       = require('gulp-watch');
 
 
 gulp.task('sass', function () {
-    return gulp.src('./css/main.scss')
+    return gulp.src('./css/*.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(minifyCss({
             keepSpecialComments: 1

@@ -10,6 +10,12 @@ Author URI: http://benwatson.uk
 License: GPL2
 */
 
+//Create shortcode
+add_shortcode( 'Places_I_Have_Been', 'show_places_i_have_been');
+
+//Add scripts and styles to admin section
+add_action( 'admin_enqueue_scripts', 'my_enqueue' );
+
 function my_enqueue($hook) {
 	if ( 'toplevel_page_places_i_have_been_settings' != $hook ) {
 		return;
@@ -17,15 +23,22 @@ function my_enqueue($hook) {
 	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/main.css", __FILE__));
 	wp_enqueue_script( 'places_i_have_been_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
 }
-add_action( 'admin_enqueue_scripts', 'my_enqueue' );
 
+//Add styles to front end
+add_action( 'wp_enqueue_scripts', 'places_i_have_been_styles' );
 
+function places_i_have_been_styles() {
+	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/places_i_have_been.css", __FILE__));
+}
+
+// Add menu item to admin section
 add_action('admin_menu', 'places_i_have_been_menu');
 
 function places_i_have_been_menu() {
 	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'places_i_have_been_settings', 'places_i_have_been_settings_page', 'dashicons-flag');
 }
 
+//Add plugin settings
 add_action( 'admin_init', 'places_i_have_been_settings' );
 
 function places_i_have_been_settings() {
@@ -58,6 +71,8 @@ function places_i_have_been_settings_page() { ?>
 	</div>
 <?php }
 
+/*--Functions to handle the data--*/
+// Organise region and country data into a usable object
 function theRegions() {
 	$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
 	$regionsJSON = file_get_contents("data/regions.json", FILE_USE_INCLUDE_PATH);
@@ -78,6 +93,7 @@ function theRegions() {
 	return $arr;
 }
 
+//Define structure of the output of HTML for admin section
 function regionStructure($region, $array, $existingData) {
 	switch ($region) {
 		case 'AS':
@@ -111,6 +127,7 @@ function regionStructure($region, $array, $existingData) {
 	return $regionStructure;
 }
 
+//Define structure of the output of HTML for admin section
 function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
 	($been == true) ? $countryClass = 'checked' : $countryClass = '';
@@ -119,6 +136,7 @@ function countryStructure($code, $name, $region, $been) {
 	return $country;
 }
 
+//Get the data
 function show_places_i_have_been(){
 	$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been'));
 	$arr = [];
@@ -132,8 +150,9 @@ function show_places_i_have_been(){
 	return outputStructure($arr);
 }
 
+//Define structure of the output of HTML for front end section
 function outputStructure($arr) {
-	$structure = '<ul id="countriesOutput">';
+	$structure = '<ul id="PlacesIHaveBeen">';
 	foreach ( $arr as $k ) {
 		$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
 		$countriesJSON = json_decode($countriesJSON);
@@ -144,5 +163,3 @@ function outputStructure($arr) {
 	$structure .= '</ul>';
 	return $structure;
 }
-
-add_shortcode( 'Places_I_Have_Been', 'show_places_i_have_been');
