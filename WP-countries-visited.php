@@ -17,7 +17,7 @@ add_shortcode( 'Places_I_Have_Been', 'show_places_i_have_been');
 add_action( 'admin_enqueue_scripts', 'my_enqueue' );
 
 function my_enqueue($hook) {
-	if ( 'toplevel_page_places_i_have_been_settings' != $hook ) {
+	if ( 'toplevel_page_places_i_have_been_settings' != $hook && 'places-i-have-been_page_places_i_have_been_output_settings' != $hook ) {
 		return;
 	}
 	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/main.css", __FILE__));
@@ -36,6 +36,8 @@ add_action('admin_menu', 'places_i_have_been_menu');
 
 function places_i_have_been_menu() {
 	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'places_i_have_been_settings', 'places_i_have_been_settings_page', 'dashicons-flag');
+	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been1', 'Manage Countries', 'manage_options', 'places_i_have_been_settings');
+	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been3', 'Display settings', 'manage_options', 'places_i_have_been_output_settings', 'places_i_have_been_output_settings_page');
 }
 
 //Add plugin settings
@@ -43,8 +45,10 @@ add_action( 'admin_init', 'places_i_have_been_settings' );
 
 function places_i_have_been_settings() {
 	register_setting( 'places_i_have_been_settings_group', 'wp_places_i_have_been' );
+	register_setting( 'places_i_have_been_settings_group_display', 'wp_places_i_have_been_display_settings' );
 }
 
+//The main settings page in the admin section
 function places_i_have_been_settings_page() { ?>
 	<div class="wrap">
 	<h2>Which countries have you been to?</h2>
@@ -68,6 +72,37 @@ function places_i_have_been_settings_page() { ?>
 	<?php submit_button(); ?>
 
 	</form>
+	</div>
+<?php }
+
+//The output settings page in the admin section
+function places_i_have_been_output_settings_page() { ?>
+	<div class="wrap">
+		<h2>How many flags do you want to display per row on your website?</h2>
+
+		<form method="post" action="options.php">
+			<?php settings_fields( 'places_i_have_been_settings_group_display' ); ?>
+			<?php do_settings_sections( 'places_i_have_been_settings_group_display' );
+			$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been_display_settings'));
+
+			//List current style options
+			$styleOptions = [];
+			$styleOptions['onePerRow']      = 1;
+			$styleOptions['twoPerRow']      = 2;
+			$styleOptions['threePerRow']    = 3;
+			$styleOptions['fourPerRow']     = 4;
+			$styleOptions['fivePerRow']     = 5;
+			$styleOptions['sixPerRow']      = 6;
+			$styleOptions['tenPerRow']      = 10;
+			$styleOptions['twentyPerRow']   = 20;
+
+			foreach ($styleOptions as $k => $v) {
+				($theExistingData == $k) ? $selected = 'checked="checked"' : $selected = '';
+				echo '<label for="'.$k.'" class="flagOptions"><input type="radio" value="'.$k.'" name="wp_places_i_have_been_display_settings" id="'.$k.'" '.$selected.'/>'.$v.'</label>';
+			}
+			submit_button(); ?>
+
+		</form>
 	</div>
 <?php }
 
@@ -152,7 +187,8 @@ function show_places_i_have_been(){
 
 //Define structure of the output of HTML for front end section
 function outputStructure($arr) {
-	$structure = '<ul id="PlacesIHaveBeen">';
+	$flagsPerRow = get_option('wp_places_i_have_been_display_settings');
+	$structure = '<ul id="PlacesIHaveBeen" class="'.$flagsPerRow.'">';
 	foreach ( $arr as $k ) {
 		$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
 		$countriesJSON = json_decode($countriesJSON);

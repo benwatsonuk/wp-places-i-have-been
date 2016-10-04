@@ -10,6 +10,21 @@
       max-width: 100%;
     }
   }
+  &.onePerRow {
+    li {
+      width: 50%;
+    }
+  }
+  &.twoPerRow {
+    li {
+      width: 50%;
+    }
+  }
+  &.threePerRow {
+    li {
+      width: 33%;
+    }
+  }
   &.fourPerRow {
     li {
       width: 25%;
@@ -26,6 +41,11 @@
     }
   }
   &.tenPerRow {
+    li {
+      width: 10%;
+    }
+  }
+  &.twentyPerRow {
     li {
       width: 10%;
     }

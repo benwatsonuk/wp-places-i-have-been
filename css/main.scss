@@ -6,6 +6,10 @@ body {
     }
     form {
       margin-top: 2em;
+      .flagOptions {
+        width: 4em;
+        display: inline-block;
+      }
         fieldset {
             legend {
               display: inline-block;
