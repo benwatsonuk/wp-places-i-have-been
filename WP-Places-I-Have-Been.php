@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: WP Places I Have Been
-Plugin URI: http://benwatson.uk/Places-I-Have-Been
+Plugin URI: http://benwatson.uk/WP-Places-I-Have-Been
 Description: An easy way to display flags of the countries that you have visited on your Wordpress site.
 Version: 1.0
 Author: Ben Watson
