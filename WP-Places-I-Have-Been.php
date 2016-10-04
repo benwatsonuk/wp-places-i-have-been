@@ -36,8 +36,8 @@ add_action('admin_menu', 'places_i_have_been_menu');
 
 function places_i_have_been_menu() {
 	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'places_i_have_been_settings', 'places_i_have_been_settings_page', 'dashicons-flag');
-	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been1', 'Manage Countries', 'manage_options', 'places_i_have_been_settings');
-	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been3', 'Display settings', 'manage_options', 'places_i_have_been_output_settings', 'places_i_have_been_output_settings_page');
+	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been - Manage Countries', 'Manage Countries', 'manage_options', 'places_i_have_been_settings');
+	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been - Manage Display Settings', 'Display settings', 'manage_options', 'places_i_have_been_output_settings', 'places_i_have_been_output_settings_page');
 }
 
 //Add plugin settings

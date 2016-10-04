@@ -5,4 +5,5 @@
 .idea/workspace.xml
 node_modules
 flags-original
+*.zip
 data/.DS_Store
