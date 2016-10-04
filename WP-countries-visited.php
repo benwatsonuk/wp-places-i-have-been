@@ -1,47 +1,47 @@
 <?php
 
 /*
-Plugin Name: WP Countries Visited
-Plugin URI: http://benwatson.uk/countries-visited
-Description: An easy way to display flags of the countries that you have visited.
+Plugin Name: WP Places I Have Been
+Plugin URI: http://benwatson.uk/Places-I-Have-Been
+Description: An easy way to display flags of the countries that you have visited on your Wordpress site.
 Version: 1.0
 Author: Ben Watson
 Author URI: http://benwatson.uk
-License: A "Slug" license name e.g. GPL2
+License: GPL2
 */
 
 function my_enqueue($hook) {
-	if ( 'toplevel_page_countries_visited_settings' != $hook ) {
+	if ( 'toplevel_page_places_i_have_been_settings' != $hook ) {
 		return;
 	}
-	wp_enqueue_style( 'countries_visited_styles', plugins_url("dist/main.css", __FILE__));
-	wp_enqueue_script( 'countries_visited_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
+	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/main.css", __FILE__));
+	wp_enqueue_script( 'places_i_have_been_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
 }
 add_action( 'admin_enqueue_scripts', 'my_enqueue' );
 
 
-add_action('admin_menu', 'countries_visited_menu');
+add_action('admin_menu', 'places_i_have_been_menu');
 
-function countries_visited_menu() {
-	add_menu_page('Countries Visited', 'Countries Visited', 'administrator', 'countries_visited_settings', 'countries_visited_settings_page', 'dashicons-flag');
+function places_i_have_been_menu() {
+	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'places_i_have_been_settings', 'places_i_have_been_settings_page', 'dashicons-flag');
 }
 
-add_action( 'admin_init', 'countries_visited_settings' );
+add_action( 'admin_init', 'places_i_have_been_settings' );
 
-function countries_visited_settings() {
-	register_setting( 'countries_visited_settings_group', 'wp_countries_visited' );
+function places_i_have_been_settings() {
+	register_setting( 'places_i_have_been_settings_group', 'wp_places_i_have_been' );
 }
 
-function countries_visited_settings_page() { ?>
+function places_i_have_been_settings_page() { ?>
 	<div class="wrap">
 	<h2>Which countries have you been to?</h2>
 	<span id="totalCountries">You have been to <span class="counter"></span> countries!</span>
 	<form method="post" action="options.php">
-    <?php settings_fields( 'countries_visited_settings_group' ); ?>
-	<?php do_settings_sections( 'countries_visited_settings_group' ); ?>
+    <?php settings_fields( 'places_i_have_been_settings_group' ); ?>
+	<?php do_settings_sections( 'places_i_have_been_settings_group' ); ?>
 	<?php
         $theData = theRegions();
-		$theExistingData = maybe_unserialize(get_option('wp_countries_visited'));
+		$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been'));
 		echo regionStructure('AS', $theData['AS'], $theExistingData);
 		echo regionStructure('EU', $theData['EU'], $theExistingData);
 		echo regionStructure('AF', $theData['AF'], $theExistingData);
@@ -115,12 +115,12 @@ function countryStructure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
 	($been == true) ? $countryClass = 'checked' : $countryClass = '';
 
-	$country = '<div class="country '.$code.' '.$countryClass.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_countries_visited[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
+	$country = '<div class="country '.$code.' '.$countryClass.'"><label for="'.$code.'"><img src="'.plugins_url("/flags/".$code.".png", __FILE__).'" />'.$name.'</label><input type="checkbox" name="wp_places_i_have_been[\''.$region.'\'][\''.$code.'\']" id="'.$code.'" value="1" '.$checked.'></div>';
 	return $country;
 }
 
-function show_visited_countries(){
-	$theExistingData = maybe_unserialize(get_option('wp_countries_visited'));
+function show_places_i_have_been(){
+	$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been'));
 	$arr = [];
 	foreach($theExistingData as $k => $v) {
 		foreach($v as $k2 => $v2) {
@@ -139,15 +139,10 @@ function outputStructure($arr) {
 		$countriesJSON = json_decode($countriesJSON);
 		$k2 = str_replace('\'', '', $k);
 		$countryName = $countriesJSON->$k2;
-		$structure .= '<li><img src="'. plugins_url( "/flags/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" alt="'.$countryName.'" /></li>';
+		$structure .= '<li><img src="'. plugins_url( "/flags/". str_replace('\'', '', $k) .".png", __FILE__ ) .'" alt="'.$countryName.'" data-toggle="tooltip" data-placement="top" title="'.$countryName.'" /></li>';
 	}
 	$structure .= '</ul>';
 	return $structure;
 }
 
-add_shortcode( 'countries_visited', 'show_visited_countries');
-
-
-
-
-
+add_shortcode( 'Places_I_Have_Been', 'show_places_i_have_been');
