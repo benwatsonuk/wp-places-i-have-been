@@ -188,6 +188,7 @@ function show_places_i_have_been(){
 //Define structure of the output of HTML for front end section
 function outputStructure($arr) {
 	$flagsPerRow = get_option('wp_places_i_have_been_display_settings');
+	($flagsPerRow == '') ? $flagsPerRow = 'fourPerRow' : $flagsPerRow = $flagsPerRow;
 	$structure = '<ul id="PlacesIHaveBeen" class="'.$flagsPerRow.'">';
 	foreach ( $arr as $k ) {
 		$countriesJSON = file_get_contents("data/countries.json", FILE_USE_INCLUDE_PATH);
