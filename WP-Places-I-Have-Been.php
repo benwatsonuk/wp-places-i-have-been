@@ -11,61 +11,61 @@ License: GPL2
 */
 
 //Create shortcode
-add_shortcode( 'Places_I_Have_Been', 'show_places_i_have_been');
+add_shortcode( 'Places_I_Have_Been', 'wp_pihb_show_places_i_have_been');
 
 //Add scripts and styles to admin section
-add_action( 'admin_enqueue_scripts', 'my_enqueue' );
+add_action( 'admin_enqueue_scripts', 'wp_pihb_enqueue' );
 
-function my_enqueue($hook) {
-	if ( 'toplevel_page_places_i_have_been_settings' != $hook && 'places-i-have-been_page_places_i_have_been_output_settings' != $hook ) {
+function wp_pihb_enqueue($hook) {
+	if ( 'toplevel_page_wp_pihb_places_i_have_been_settings' != $hook && 'places-i-have-been_page_wp_pihb_places_i_have_been_output_settings' != $hook ) {
 		return;
 	}
-	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/main.css", __FILE__));
-	wp_enqueue_script( 'places_i_have_been_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
+	wp_enqueue_style( 'wp_pihb_places_i_have_been_styles', plugins_url("dist/main.css", __FILE__));
+	wp_enqueue_script( 'wp_pihb_places_i_have_been_script', plugins_url("dist/main.js", __FILE__), 'jQuery');
 }
 
 //Add styles to front end
-add_action( 'wp_enqueue_scripts', 'places_i_have_been_styles' );
+add_action( 'wp_enqueue_scripts', 'wp_pihb_places_i_have_been_styles' );
 
-function places_i_have_been_styles() {
-	wp_enqueue_style( 'places_i_have_been_styles', plugins_url("dist/places_i_have_been.css", __FILE__));
+function wp_pihb_places_i_have_been_styles() {
+	wp_enqueue_style( 'wp_pihb_places_i_have_been_styles', plugins_url("dist/places_i_have_been.css", __FILE__));
 }
 
 // Add menu item to admin section
-add_action('admin_menu', 'places_i_have_been_menu');
+add_action('admin_menu', 'wp_pihb_places_i_have_been_menu');
 
-function places_i_have_been_menu() {
-	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'places_i_have_been_settings', 'places_i_have_been_settings_page', 'dashicons-flag');
-	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been - Manage Countries', 'Manage Countries', 'manage_options', 'places_i_have_been_settings');
-	add_submenu_page( 'places_i_have_been_settings', 'Places I Have Been - Manage Display Settings', 'Display settings', 'manage_options', 'places_i_have_been_output_settings', 'places_i_have_been_output_settings_page');
+function wp_pihb_places_i_have_been_menu() {
+	add_menu_page('Places I Have Been', 'Places I Have Been', 'administrator', 'wp_pihb_places_i_have_been_settings', 'wp_pihb_places_i_have_been_settings_page', 'dashicons-flag');
+	add_submenu_page( 'wp_pihb_places_i_have_been_settings', 'Places I Have Been - Manage Countries', 'Manage Countries', 'manage_options', 'wp_pihb_places_i_have_been_settings');
+	add_submenu_page( 'wp_pihb_places_i_have_been_settings', 'Places I Have Been - Manage Display Settings', 'Display settings', 'manage_options', 'wp_pihb_places_i_have_been_output_settings', 'wp_pihb_places_i_have_been_output_settings_page');
 }
 
 //Add plugin settings
-add_action( 'admin_init', 'places_i_have_been_settings' );
+add_action( 'admin_init', 'wp_pihb_places_i_have_been_settings' );
 
-function places_i_have_been_settings() {
-	register_setting( 'places_i_have_been_settings_group', 'wp_places_i_have_been' );
-	register_setting( 'places_i_have_been_settings_group_display', 'wp_places_i_have_been_display_settings' );
+function wp_pihb_places_i_have_been_settings() {
+	register_setting( 'wp_pihb_places_i_have_been_settings_group', 'wp_places_i_have_been' );
+	register_setting( 'wp_pihb_places_i_have_been_settings_group_display', 'wp_places_i_have_been_display_settings' );
 }
 
 //The main settings page in the admin section
-function places_i_have_been_settings_page() { ?>
+function wp_pihb_places_i_have_been_settings_page() { ?>
 	<div class="wrap">
 	<h2>Which countries have you been to?</h2>
 	<span id="totalCountries">You have been to <span class="counter"></span> countries!</span>
 	<form method="post" action="options.php">
-    <?php settings_fields( 'places_i_have_been_settings_group' ); ?>
-	<?php do_settings_sections( 'places_i_have_been_settings_group' ); ?>
+    <?php settings_fields( 'wp_pihb_places_i_have_been_settings_group' ); ?>
+	<?php do_settings_sections( 'wp_pihb_places_i_have_been_settings_group' ); ?>
 	<?php
         $theData = theRegions();
 		$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been'));
-		echo regionStructure('AS', $theData['AS'], $theExistingData);
-		echo regionStructure('EU', $theData['EU'], $theExistingData);
-		echo regionStructure('AF', $theData['AF'], $theExistingData);
-		echo regionStructure('OC', $theData['OC'], $theExistingData);
-		echo regionStructure('NA', $theData['NA'], $theExistingData);
-		echo regionStructure('SA', $theData['SA'], $theExistingData);
-		echo regionStructure('AN', $theData['AN'], $theExistingData);
+		echo wp_pihb_region_structure('AS', $theData['AS'], $theExistingData);
+		echo wp_pihb_region_structure('EU', $theData['EU'], $theExistingData);
+		echo wp_pihb_region_structure('AF', $theData['AF'], $theExistingData);
+		echo wp_pihb_region_structure('OC', $theData['OC'], $theExistingData);
+		echo wp_pihb_region_structure('NA', $theData['NA'], $theExistingData);
+		echo wp_pihb_region_structure('SA', $theData['SA'], $theExistingData);
+		echo wp_pihb_region_structure('AN', $theData['AN'], $theExistingData);
 
     ?>
 
@@ -76,13 +76,13 @@ function places_i_have_been_settings_page() { ?>
 <?php }
 
 //The output settings page in the admin section
-function places_i_have_been_output_settings_page() { ?>
+function wp_pihb_places_i_have_been_output_settings_page() { ?>
 	<div class="wrap">
 		<h2>How many flags do you want to display per row on your website?</h2>
 
 		<form method="post" action="options.php">
-			<?php settings_fields( 'places_i_have_been_settings_group_display' ); ?>
-			<?php do_settings_sections( 'places_i_have_been_settings_group_display' );
+			<?php settings_fields( 'wp_pihb_places_i_have_been_settings_group_display' ); ?>
+			<?php do_settings_sections( 'wp_pihb_places_i_have_been_settings_group_display' );
 			$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been_display_settings'));
 
 			//List current style options
@@ -129,7 +129,7 @@ function theRegions() {
 }
 
 //Define structure of the output of HTML for admin section
-function regionStructure($region, $array, $existingData) {
+function wp_pihb_region_structure($region, $array, $existingData) {
 	switch ($region) {
 		case 'AS':
 			$regionName = 'Asia';
@@ -153,17 +153,17 @@ function regionStructure($region, $array, $existingData) {
 			$regionName = 'Antarctica';
 		break;
 	}
-	$regionStructure = '<fieldset><legend>'.$regionName.'<span class="countryCount"></span></legend><div class="countryContainer">';
+	$wp_pihb_region_structure = '<fieldset><legend>'.$regionName.'<span class="countryCount"></span></legend><div class="countryContainer">';
 	foreach($array as $k => $v) {
 		($existingData["'$region'"]["'$k'"]) ? $been = true : $been = false;
-		$regionStructure .= countryStructure($k, $v, $region, $been);
+		$wp_pihb_region_structure .= wp_pihb_country_structure($k, $v, $region, $been);
 	}
-	$regionStructure .= '</div></fieldset>';
-	return $regionStructure;
+	$wp_pihb_region_structure .= '</div></fieldset>';
+	return $wp_pihb_region_structure;
 }
 
 //Define structure of the output of HTML for admin section
-function countryStructure($code, $name, $region, $been) {
+function wp_pihb_country_structure($code, $name, $region, $been) {
 	($been == true) ? $checked = 'checked="checked"' : $checked = '';
 	($been == true) ? $countryClass = 'checked' : $countryClass = '';
 
@@ -172,7 +172,7 @@ function countryStructure($code, $name, $region, $been) {
 }
 
 //Get the data
-function show_places_i_have_been(){
+function wp_pihb_show_places_i_have_been(){
 	$theExistingData = maybe_unserialize(get_option('wp_places_i_have_been'));
 	$arr = [];
 	foreach($theExistingData as $k => $v) {
@@ -182,11 +182,11 @@ function show_places_i_have_been(){
 	}
 	sort($arr);
 
-	return outputStructure($arr);
+	return wp_pihb_output_structure($arr);
 }
 
 //Define structure of the output of HTML for front end section
-function outputStructure($arr) {
+function wp_pihb_output_structure($arr) {
 	$flagsPerRow = get_option('wp_places_i_have_been_display_settings');
 	($flagsPerRow == '') ? $flagsPerRow = 'fourPerRow' : $flagsPerRow = $flagsPerRow;
 	$structure = '<ul id="PlacesIHaveBeen" class="'.$flagsPerRow.'">';
