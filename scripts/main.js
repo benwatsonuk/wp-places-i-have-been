@@ -5,7 +5,7 @@ jQuery( document ).ready( function( $ ) {
         countryContainer.slideUp();
         jQuery(this).find('legend').append('<a class="icon-container"><span class="plus-icon"></span></a>');
         jQuery(this).find('.countryCount').text(countryCount(countryContainer));
-        jQuery('#totalCountries .counter').text(countryCount(jQuery('form')));
+        jQuery('#totalCountries').find('.counter').text(countryCount(jQuery('form')));
     });
 
     jQuery('form legend').on('click', function(e) {
@@ -17,7 +17,7 @@ jQuery( document ).ready( function( $ ) {
         jQuery(this).parent().toggleClass('checked');
         var parent = jQuery(this).parent().parent();
         jQuery(this).parent().parent().parent().find('.countryCount').text(countryCount(parent));
-        jQuery('#totalCountries .counter').text(countryCount(jQuery('form')));
+        jQuery('#totalCountries').find('.counter').text(countryCount(jQuery('form')));
 
     });
 
